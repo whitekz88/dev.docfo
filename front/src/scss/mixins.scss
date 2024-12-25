@@ -1,0 +1,81 @@
+// *** Миксин подключает файлы шрифтов
+@mixin font($font_name, $file_name, $weight, $style) {
+  @font-face {
+    font-family: $font_name, sans-serif; //исправить если нужны с засечками
+    src: url('../fonts/#{$file_name}.woff2') format('woff2'),
+      url('../fonts/#{$file_name}.woff') format('woff');
+    font-weight: #{$weight};
+    font-style: #{$style};
+    font-display: swap;
+  }
+}
+
+// *** Адаптивный шрифт
+@mixin adaptiv-font($pcSize, $mobSize, $maxSize) {
+  $addSize: $pcSize - $mobSize;
+  @if $maxSize==1 {
+    // Только если меньше контейнера
+    font-size: $pcSize + px;
+    @media (max-width: #{$containerWidth + px}) {
+      font-size: calc(
+        #{$mobSize + px} + #{$addSize} *
+          ((100vw - 320px) / #{$containerWidth - 320})
+      );
+    }
+  } @else if $maxSize==2 {
+    // Только если больше контейнера
+    font-size: $pcSize + px;
+    @media (min-width: #{$containerWidth + px}) {
+      font-size: calc(
+        #{$mobSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320})
+      );
+    }
+  } @else {
+    // Всегда
+    font-size: calc(
+      #{$mobSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320})
+    );
+  }
+}
+
+//*** Отзывчивый line-height
+@mixin line-height($lineHeight, $fontSize) {
+  line-height: calc(#{$lineHeight} / #{$fontSize} * 100%);
+}
+
+// *** Адаптивное свойство
+@mixin adaptiv-value($property, $startSize, $minSize, $type) {
+  $addSize: $startSize - $minSize;
+  @if $type==1 {
+    // Только если меньше контейнера
+    #{$property}: $startSize + px;
+    @media (max-width: #{$containerWidth + px}) {
+      #{$property}: calc(
+        #{$minSize + px} + #{$addSize} *
+          ((100vw - 320px) / #{$containerWidth - 320})
+      );
+    }
+  } @else if $type==2 {
+    // Только если больше контейнера
+    #{$property}: $startSize + px;
+    @media (min-width: #{$containerWidth + px}) {
+      #{$property}: calc(
+        #{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320})
+      );
+    }
+  } @else {
+    // Всегда
+    #{$property}: calc(
+      #{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320})
+    );
+  }
+}
+// *** Функции
+// Условная величина в процентах
+@function percent($num1, $num2) {
+  @return calc(($num1 / $num2) * 100%);
+}
+// Деление
+@function divide($num1, $num2) {
+  @return calc($num1 / $num2);
+}
