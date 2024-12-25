@@ -1,0 +1,12 @@
+.container {
+    width: $desktop-width;
+    margin: 0 auto;
+    padding: 0 64px;
+}
+
+.container-fluid {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: $main-color;
+}

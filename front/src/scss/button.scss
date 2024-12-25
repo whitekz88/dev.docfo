@@ -1,0 +1,29 @@
+.button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    text-decoration: none;
+    text-align: center;
+    color: #212121;
+    font-family: $base-font;
+    font-size: 18px;
+    background-color: inherit;
+    border-radius: 12px;
+}
+
+.button--login {
+    min-width: 183px;
+    padding: 12px 0;
+    background-color: #ffffff;
+    font-weight: 600;
+
+}
+
+.button--ask-question {
+    min-width: 205px;
+    padding: 12px 0;
+    background-color: $main-color;
+    color: #ffffff;
+    font-weight: 600;
+    line-height: 24px;
+}

@@ -1,22 +1,11 @@
-@import 'vars'; // переменные
-@import 'mixins'; // миксины
+/* Служебные */
+@import './common/vars';
+@import './common/global';
+@import './common/media';
+@import './common/containers';
 
-// подключаем шрифты плагином google fonts (shift + command + p) команда google fonts: insert css import (назвагие шрифта),взять в лапки
-//&display=swap&subset=cyrillic-ext (добавить параметр для быстрой загрузки и если есть кирилица)
-// @import url('https://fonts.googleapis.com/css?family=Heebo:regular,300,500,700,900&display=swap&subset=cyrillic-ext');
-
-// @import 'fonts';
-@import 'icons'; // иконочные шрифты (раскоментировать когда буду использовать)
-@import 'global'; // глобальные стили
-// @import 'popup'; // стили попапа
-// @import 'sliders'; // стили слайдера Swiper
-
-//   *** my styles ***
-// @import 'lightgallery';
+/* Блоки */
+@import 'header';
 @import 'footer';
-// ===================================================================================
+@import 'button';
 
-
-// ===========================================================================
-//   *** media screan ***
-@import 'media';
