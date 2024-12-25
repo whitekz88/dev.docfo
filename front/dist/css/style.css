@@ -1,18 +1,12 @@
 @charset "UTF-8";
-
 /* Служебные */
-
 /* Цвета */
-
 /* Шрифты */
-
 /* Вьюпорты */
-
 *,
 *::before,
 *::after {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .visually-hidden {
@@ -26,10 +20,6 @@
   clip-path: inset(100%);
   clip: rect(0 0 0 0);
   overflow: hidden;
-}
-
-.disabled {
-  display: none;
 }
 
 .container {
@@ -46,24 +36,15 @@
 }
 
 /* Блоки */
-
 .header {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
   padding: 10px 64px;
   font-family: "Roboto", "Arial", sans-serif;
   background-color: #ffe6eb;
 }
-
 .header__logo-link {
   text-decoration: none;
   color: #000000;
@@ -71,27 +52,22 @@
   font-weight: 500;
   line-height: 32px;
 }
-
 .header__lang-check {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-column-gap: 6px;
-     -moz-column-gap: 6px;
-          column-gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
   margin: 0;
   padding: 0;
   border: 0;
   background-color: inherit;
+  font-family: inherit;
+  cursor: pointer;
+  column-gap: 6px;
   font-size: 16px;
   line-height: 20px;
   font-weight: 500;
   text-transform: uppercase;
 }
-
 .header__lang-check::before {
   content: "";
   display: block;
@@ -99,38 +75,53 @@
   height: 20px;
   background-image: url("../images/icons/lang.svg");
 }
-
 .header__search {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background-color: inherit;
+  font-family: inherit;
+  cursor: pointer;
   width: 48px;
   height: 48px;
-  margin: 0;
-  background-color: inherit;
-  border: 0;
   border-radius: 12px;
   background: rgba(208, 208, 208, 0.2) url(../images/icons/search.svg) center no-repeat;
 }
-
 .header__wrapper {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-  -webkit-column-gap: 16px;
-     -moz-column-gap: 16px;
-          column-gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 16px;
+}
+
+.main {
+  display: grid;
+  grid-template-columns: 205px 1fr 205px;
+  font-family: "Roboto", "Arial", sans-serif;
+  background-color: #f5f5f5;
+}
+
+.main__left-side,
+.main__center-side,
+.main__right-side {
+  margin-top: 30px;
+}
+
+.main__center-side {
+  padding: 0 40px;
 }
 
 .button {
   margin: 0;
   padding: 0;
   border: 0;
+  background-color: inherit;
+  font-family: inherit;
+  cursor: pointer;
   text-decoration: none;
   text-align: center;
   color: #212121;
-  font-family: "Roboto", "Arial", sans-serif;
   font-size: 18px;
-  background-color: inherit;
   border-radius: 12px;
 }
 
@@ -148,4 +139,52 @@
   color: #ffffff;
   font-weight: 600;
   line-height: 24px;
+}
+
+.nav-menu__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+}
+.nav-menu__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 8px;
+}
+.nav-menu__item::before {
+  content: "";
+  width: 24px;
+  height: 24px;
+}
+.nav-menu__item--consultant::before {
+  background-image: url(../images/icons/nav-menu-consultant.svg);
+}
+.nav-menu__item--doctors::before {
+  background-image: url(../images/icons/nav-menu-doctors.svg);
+}
+.nav-menu__item--hospitals::before {
+  background-image: url(../images/icons/nav-menu-hospitals.svg);
+}
+.nav-menu__item--help::before {
+  background-image: url(../images/icons/nav-menu-help.svg);
+}
+.nav-menu__item--pay::before {
+  background-image: url(../images/icons/nav-menu-pay.svg);
+}
+.nav-menu__item--for-doctors::before {
+  background-image: url(../images/icons/nav-menu-for-doctors.svg);
+}
+.nav-menu__item--contacts::before {
+  background-image: url(../images/icons/nav-menu-contacts.svg);
+}
+.nav-menu__link {
+  font-size: 18px;
+  line-height: 18px;
+  display: block;
+  text-decoration: none;
+  color: inherit;
 }

@@ -1,0 +1,47 @@
+.nav-menu {
+
+    &__list {
+      @include clear-list;
+      display: flex;
+      flex-direction: column;
+      row-gap: 20px;
+      }
+
+    &__item {
+      @include flex-center;
+      column-gap: 8px;
+      &::before {
+        content: "";
+        width: 24px;
+        height: 24px;
+      }
+      &--consultant::before {
+        background-image: url(../images/icons/nav-menu-consultant.svg);
+      }
+      &--doctors::before {
+        background-image: url(../images/icons/nav-menu-doctors.svg);
+      }
+      &--hospitals::before {
+        background-image: url(../images/icons/nav-menu-hospitals.svg);
+      }
+      &--help::before {
+        background-image: url(../images/icons/nav-menu-help.svg);
+      }
+      &--pay::before {
+        background-image: url(../images/icons/nav-menu-pay.svg);
+      }
+      &--for-doctors::before {
+        background-image: url(../images/icons/nav-menu-for-doctors.svg);
+      }
+      &--contacts::before {
+        background-image: url(../images/icons/nav-menu-contacts.svg);
+      }
+    }
+
+    &__link {
+      font-size: 18px;
+      line-height: 18px;
+      @include clear-link;
+    }
+}
+

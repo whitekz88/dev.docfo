@@ -1,13 +1,9 @@
 .button {
-    margin: 0;
-    padding: 0;
-    border: 0;
+    @include clear-button;
     text-decoration: none;
     text-align: center;
     color: #212121;
-    font-family: $base-font;
     font-size: 18px;
-    background-color: inherit;
     border-radius: 12px;
 }
 

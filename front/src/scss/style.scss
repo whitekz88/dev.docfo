@@ -2,10 +2,13 @@
 @import './common/vars';
 @import './common/global';
 @import './common/media';
+@import './common/mixins';
 @import './common/containers';
 
 /* Блоки */
 @import 'header';
+@import 'main';
 @import 'footer';
 @import 'button';
+@import 'nav-menu';
 
