@@ -1,0 +1,103 @@
+remove this line, and remove `.example` from this file name
+{
+  "name": "Mayro Pro",
+  "short_name": "Mayro Pro: Material Design Theme",
+  "description": "Material Design Theme for Question2Answer (Q2A).",
+
+  "start_url": "/?utm_source=homescreen",
+  "scope": "/",
+  "theme_color": "#EEEEEE",
+  "background_color": "#EEEEEE",
+  "display": "standalone",
+
+  "icons": [
+    {
+      "src": "/images/icons/icons-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icons/icons-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/images/icons/icons-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icons/icons-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+
+  "shortcuts": [
+    {
+      "name": "Private Messages",
+      "short_name": "Messages",
+      "url": "/messages/?utm_source=homescreen&utm_medium=shortcut",
+      "icons": [
+        {
+          "src": "/images/shortcuts/messages.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "My Updates",
+      "short_name": "Updates",
+      "url": "/updates/?utm_source=homescreen&utm_medium=shortcut",
+      "icons": [
+        {
+          "src": "/images/shortcuts/updates.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Ask a Question",
+      "short_name": "Ask",
+      "url": "/ask/?utm_source=homescreen&utm_medium=shortcut",
+      "icons": [
+        {
+          "src": "/images/shortcuts/ask.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+
+  "screenshots": [
+    {
+      "src": "/images/screenshots/screenshot1.webp",
+      "sizes": "720x1440",
+      "type": "image/webp"
+    },
+    {
+      "src": "/images/screenshots/screenshot2.webp",
+      "sizes": "720x1440",
+      "type": "image/webp"
+    },
+    {
+      "src": "/images/screenshots/screenshot3.webp",
+      "sizes": "720x1440",
+      "type": "image/webp"
+    },
+    {
+      "src": "/images/screenshots/screenshot4.webp",
+      "sizes": "720x1440",
+      "type": "image/webp"
+    },
+    {
+      "src": "/images/screenshots/screenshot5.webp",
+      "sizes": "720x1440",
+      "type": "image/webp"
+    }
+  ]
+}
