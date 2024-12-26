@@ -23,7 +23,7 @@
 }
 
 .container {
-  width: 1440px;
+  max-width: 1440px;
   margin: 0 auto;
   padding: 0 64px;
 }
@@ -187,4 +187,32 @@
   display: block;
   text-decoration: none;
   color: inherit;
+}
+
+.categories {
+  margin-top: 40px;
+}
+.categories__title {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 30px;
+}
+.categories__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+  margin-top: 16px;
+}
+.categories__link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  font-size: 16px;
+  line-height: 21px;
+}
+.categories__count {
+  margin-left: 4px;
 }
