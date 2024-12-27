@@ -32,7 +32,7 @@
       width: 48px;
       height: 48px;
       border-radius: 12px;
-      background: rgba(208, 208, 208, 0.2) url(../images/icons/search.svg) center no-repeat;
+      background: rgba(208, 208, 208, 0.2) url("../images/icons/search.svg") center no-repeat;
     }
     &__wrapper {
       @include flex-center;

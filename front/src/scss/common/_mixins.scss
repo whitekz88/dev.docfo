@@ -24,3 +24,9 @@
   padding: 0;
   list-style: none;
 }
+
+@mixin font-stngs($size, $height, $weight) {
+  font-size: $size;
+  line-height: $height;
+  font-weight: $weight;
+}

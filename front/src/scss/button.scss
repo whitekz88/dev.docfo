@@ -5,21 +5,39 @@
     color: #212121;
     font-size: 18px;
     border-radius: 12px;
-}
-
-.button--login {
-    min-width: 183px;
-    padding: 12px 0;
-    background-color: #ffffff;
-    font-weight: 600;
-
-}
-
-.button--ask-question {
-    min-width: 205px;
-    padding: 12px 0;
-    background-color: $main-color;
-    color: #ffffff;
-    font-weight: 600;
-    line-height: 24px;
-}
+      &--login {
+        min-width: 183px;
+        padding: 12px 0;
+        background-color: #ffffff;
+        font-weight: 600;
+      }
+      &--ask-question {
+        min-width: 205px;
+        padding: 12px 0;
+        background-color: $main-color;
+        color: #ffffff;
+        font-weight: 600;
+        line-height: 24px;
+      }
+      &--payment-method {
+        @include font-stngs(16px, 21px, 400);
+        padding: 7px 18px;
+        background-color: #ffffff;
+        border-radius: 12px;
+      }
+      &--payment-method-active {
+        @include font-stngs(16px, 21px, 400);
+        padding: 7px 18px;
+        background-color: #232323;
+        color: #ffffff;
+        border-radius: 12px;
+      }
+      &--ask-hero-banner {
+        @include font-stngs(18px, 18px, 600);
+        min-width: 300px;
+        margin-top: 24px;
+        padding: 15px 10px;
+        text-align: center;
+        background-color: #ffffff;
+      }
+    }
