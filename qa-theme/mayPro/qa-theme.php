@@ -14,6 +14,7 @@ class qa_html_theme extends qa_html_theme_base
 		$this->output('<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>');
 		$this->output('<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">');
 		$this->output('<link rel="apple-touch-icon" href="'.$this->rooturl.'img/favicons/apple.png">');
+			
 		parent::head_metas();
 	}
 
@@ -154,7 +155,38 @@ class qa_html_theme extends qa_html_theme_base
 		$this->widgets('full', 'bottom');
 
 		$this->output('</div> <!-- END body-wrapper -->');
-
+		
+		$this->output('<link rel="stylesheet" href="/qa-content/select/css/select2.min.css">
+		<script src="/qa-content/select/js/select2.min.js"></script>
+		<script src="/qa-content/select/js/i18n/ru.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+		<link
+		  rel="stylesheet"
+		  href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"
+		/>
+		<style>
+		.fancybox__container * {
+			color: #fff;
+		}
+		</style>
+		<script>
+		$(document).ready(function() {
+			$(\'.js-select2\').select2({
+				placeholder: "Выберите специальность",
+				language: "ru"
+			});
+			Fancybox.bind("[data-fancybox]", {
+			  // Your custom options
+			});
+		});
+		
+		</script>
+		
+		
+		
+		
+		');
+		
 		$this->body_suffix();
 	}
 

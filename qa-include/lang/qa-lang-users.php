@@ -134,4 +134,6 @@ return array(
 	'wall_posts_explanation' => 'Allow users to post on your wall (you will also be emailed)',
 	'website' => 'Website',
 	'x_ago_from_y' => '^1 ago from ^2',
+	
+	'image' => 'Image'
 );

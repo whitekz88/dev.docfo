@@ -268,6 +268,7 @@ function qa_db_user_rand_sessioncode()
  */
 function qa_db_user_profile_set($userid, $field, $value)
 {
+	
 	qa_db_query_sub(
 		'INSERT INTO ^userprofile (userid, title, content) VALUES ($, $, $) ' .
 		'ON DUPLICATE KEY UPDATE content = VALUES(content)',

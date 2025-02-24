@@ -179,7 +179,7 @@ function qa_delete_blob($blobid)
 
 	if (defined('QA_BLOBS_DIRECTORY')) {
 		$blob = qa_db_blob_read($blobid);
-
+	
 		if (isset($blob) && !isset($blob['content']))
 			unlink(qa_get_blob_filename($blobid, $blob['format']));
 	}

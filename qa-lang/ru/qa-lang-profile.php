@@ -87,4 +87,7 @@ return array(
 	'x_down_votes' => '^ голосов ПРОТИВ',
 	'x_up_votes' => '^ голосов ЗА',
 	'x_with_best_chosen' => ' (^ с лучшим ответом)',
+	
+
+	'stw_user_category_edit_label' => 'Специальность',
 );

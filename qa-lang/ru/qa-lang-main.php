@@ -232,4 +232,7 @@ return array(
 	'x_votes' => '^ голосов',
 	'x_weeks' => '^ нед.',
 	'x_years' => '^ г.',
+	'doctors_all_title' => 'Рейтинг лучших докторов',
+	'doctors_in_x' => 'Доктора в категории "^"',
+	'doctors_no_active' => 'Активных докторов не найдено',
 );

@@ -595,3 +595,29 @@ function qa_set_user_avatar($userid, $imagedata, $oldblobid = null)
 
 	return false;
 }
+
+
+function qa_field_image_save($userid, $imagedata, $oldblobid = null)
+{
+	
+	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
+
+	require_once QA_INCLUDE_DIR . 'util/image.php';
+
+	$imagedata = qa_image_constrain_data($imagedata, $width, $height, qa_opt('field_image_size'));
+	
+	require_once QA_INCLUDE_DIR . 'app/blobs.php';
+	
+	if (isset($oldblobid))
+		qa_delete_blob($oldblobid);
+	
+	if (isset($imagedata)) {
+		
+		$newblobid = qa_create_blob($imagedata, 'jpeg', null, $userid, null, qa_remote_ip_address());
+		
+		return $newblobid;
+		
+	}
+
+	return false;
+}

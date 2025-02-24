@@ -391,6 +391,7 @@ function qa_default_option($name)
 		'voting_on_as' => 1,
 		'voting_on_cs' => 0,
 		'voting_on_qs' => 1,
+		'field_image_size' => 1024,
 	);
 
 	if (isset($fixed_defaults[$name])) {

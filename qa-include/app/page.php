@@ -450,6 +450,7 @@ function qa_page_routing()
 		'users/blocked' => 'pages/users-blocked.php',
 		'users/new' => 'pages/users-newest.php',
 		'users/special' => 'pages/users-special.php',
+		'doctors/' => 'pages/doctors.php',
 	);
 }
 

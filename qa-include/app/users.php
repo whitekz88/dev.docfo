@@ -45,6 +45,7 @@ define('QA_USER_FLAGS_MUST_APPROVE', 512); // @deprecated
 
 define('QA_FIELD_FLAGS_MULTI_LINE', 1);
 define('QA_FIELD_FLAGS_LINK_URL', 2);
+define('QA_FIELD_FLAGS_IMAGE', 3);
 define('QA_FIELD_FLAGS_ON_REGISTER', 4);
 
 if (!defined('QA_FORM_EXPIRY_SECS')) {
@@ -1253,6 +1254,7 @@ function qa_user_userfield_label($userfield)
 			'about' => 'users/about',
 			'location' => 'users/location',
 			'website' => 'users/website',
+			'image' => 'users/image',
 		);
 
 		if (isset($userfield['title']) && isset($defaultlabels[$userfield['title']]))

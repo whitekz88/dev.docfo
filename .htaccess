@@ -1,5 +1,10 @@
 # In order for the web server to process this file it must be renamed to ".htaccess"
 
+AuthType Basic
+AuthName "Thats protected Area!"
+AuthUserFile /var/www/dev.docfo.ru/public_html/.htpasswd
+Require valid-user
+
 Options -Indexes
 DirectoryIndex index.php
 

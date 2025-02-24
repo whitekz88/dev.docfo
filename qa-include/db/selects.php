@@ -1110,6 +1110,36 @@ function qa_db_category_nav_selectspec($slugsorid, $isid, $ispostid = false, $fu
 
 
 /**
+ * Вывод списка категорий всех
+ * @param $categoryid
+ * @return array
+ */
+function qa_db_category_stw_all()
+{
+	return array(
+		'columns' => array('categoryid', 'title'),
+		'source' => '^categories ORDER BY position',
+		'arraykey' => 'categoryid'
+	);
+}
+
+/**
+ * Вывод списка категорий пользователя
+ * @param $categoryid
+ * @return array
+ */
+function qa_db_category_stw_user($userid)
+{
+	return array(
+		'columns' => array('categoryid'),
+		'source' => '^usercategories WHERE userid=$',
+		'arguments' => array($userid),
+		'arrayvalue' => 'categoryid'
+	);
+}
+
+
+/**
  * Return the selectspec to retrieve information on all subcategories of $categoryid (used for Ajax navigation of hierarchy)
  * @param $categoryid
  * @return array
@@ -1537,13 +1567,88 @@ function qa_db_top_users_selectspec($start, $count = null)
 		$basePoints = (int)qa_opt('points_base');
 		$source = '^users JOIN (SELECT ^users.userid, COALESCE(points,' . $basePoints . ') AS points FROM ^users LEFT JOIN ^userpoints ON ^users.userid=^userpoints.userid ORDER BY points DESC LIMIT #,#) y ON ^users.userid=y.userid';
 	} else {
-		$source = '^users JOIN (SELECT userid FROM ^userpoints ORDER BY points DESC LIMIT #,#) y ON ^users.userid=y.userid JOIN ^userpoints ON ^users.userid=^userpoints.userid';;
+		$source = '^users JOIN (SELECT userid FROM ^userpoints ORDER BY points DESC LIMIT #,#) y ON ^users.userid=y.userid JOIN ^userpoints ON ^users.userid=^userpoints.userid';
 	}
 
 	return array(
 		'columns' => array('^users.userid', 'handle', 'points', 'flags', '^users.email', 'avatarblobid' => 'BINARY avatarblobid', 'avatarwidth', 'avatarheight'),
 		'source' => $source,
 		'arguments' => array($start, $count),
+		'arraykey' => 'userid',
+		'sortdesc' => 'points',
+	);
+}
+
+
+/**
+ * Вывод списка всех докторов
+ * $count (if null, a default is used) users starting from the offset $start.
+ * @param $start
+ * @param $categoryid
+ * @param $count
+ * @return array
+ */
+function qa_db_stw_doctors_selectspec($start, $count = null)
+{
+	
+	$count = isset($count) ? min($count, QA_DB_RETRIEVE_USERS) : QA_DB_RETRIEVE_USERS;
+	
+	// If the site is configured to share the ^users table then there might not be a record in the ^userpoints table
+	if (defined('QA_MYSQL_USERS_PREFIX')) {
+		$basePoints = (int)qa_opt('points_base');
+		$source = '^users 
+			JOIN (SELECT ^users.userid, COALESCE(points,' . $basePoints . ') AS points FROM ^users LEFT JOIN ^userpoints ON ^users.userid=^userpoints.userid ORDER BY points DESC) y ON ^users.userid=y.userid LIMIT #,#
+			';
+	} else {
+		$source = '^users 
+			 JOIN (SELECT userid FROM ^userpoints ORDER BY points DESC) y ON ^users.userid=y.userid JOIN ^userpoints ON ^users.userid=^userpoints.userid
+			 WHERE ^users.level=20 LIMIT #,#
+			 ';
+	}
+
+	return array(
+		'columns' => array('^users.userid', 'handle', 'points', 'flags', '^users.email', 'avatarblobid' => 'BINARY avatarblobid', 'avatarwidth', 'avatarheight'),
+		'source' => $source,
+		'arguments' => array($start, $count),
+		'arraykey' => 'userid',
+		'sortdesc' => 'points',
+	);
+}
+
+/**
+ * Вывод списка докторов категории
+ * $count (if null, a default is used) users starting from the offset $start.
+ * @param $start
+ * @param $categoryid
+ * @param $count
+ * @return array
+ */
+function qa_db_stw_doctors_categoryid_selectspec($start, $categoryid, $count = null)
+{
+	
+	
+	$count = isset($count) ? min($count, QA_DB_RETRIEVE_USERS) : QA_DB_RETRIEVE_USERS;
+	
+	// If the site is configured to share the ^users table then there might not be a record in the ^userpoints table
+	if (defined('QA_MYSQL_USERS_PREFIX')) {
+		$basePoints = (int)qa_opt('points_base');
+		$source = '^users 
+			INNER JOIN ^usercategories ON (^usercategories.userid=^users.userid)
+			JOIN (SELECT ^users.userid, COALESCE(points,' . $basePoints . ') AS points FROM ^users LEFT JOIN ^userpoints ON ^users.userid=^userpoints.userid ORDER BY points DESC) y ON ^users.userid=y.userid
+			WHERE ^users.level=20 AND ^usercategories.categoryid=$ LIMIT #,#
+			';
+	} else {
+		$source = '^users 
+			 INNER JOIN ^usercategories ON (^usercategories.userid=^users.userid)
+			 JOIN (SELECT userid FROM ^userpoints ORDER BY points DESC) y ON ^users.userid=y.userid JOIN ^userpoints ON ^users.userid=^userpoints.userid
+			 WHERE ^users.level=20 AND ^usercategories.categoryid=$ LIMIT #,#
+			 ';
+	}
+
+	return array(
+		'columns' => array('^users.userid', 'handle', 'points', 'flags', '^users.email', 'avatarblobid' => 'BINARY avatarblobid', 'avatarwidth', 'avatarheight'),
+		'source' => $source,
+		'arguments' => array($categoryid, $start, $count),
 		'arraykey' => 'userid',
 		'sortdesc' => 'points',
 	);

@@ -54,6 +54,17 @@ list($useraccount, $userprofile, $userpoints, $userfields) = qa_db_select_with_p
 	qa_db_userfields_selectspec()
 );
 
+
+//Удаляем поля, если не доктор
+if($useraccount['level'] <> 20){	
+	foreach($userfields as $key => $value){
+		if(strpos($key, 'doctor_') == 0) {
+	       unset($userfields[$key]);
+	    }
+	}
+}	
+
+
 $changehandle = qa_opt('allow_change_usernames') || (!$userpoints['qposts'] && !$userpoints['aposts'] && !$userpoints['cposts']);
 $doconfirms = qa_opt('confirm_user_emails') && $useraccount['level'] < QA_USER_LEVEL_EXPERT;
 $isconfirmed = ($useraccount['flags'] & QA_USER_FLAGS_EMAIL_CONFIRMED) ? true : false;
@@ -67,6 +78,32 @@ if (QA_PASSWORD_HASH) {
 $permit_error = qa_user_permit_error();
 $isblocked = $permit_error !== false;
 $pending_confirmation = $doconfirms && !$isconfirmed;
+
+//Если пользователь ДОКТОР, то получаем категории
+if($useraccount['level'] == 20){
+
+	//Полный список всех категорий пользователей
+	$stw_users_categories = qa_db_select_with_pending(qa_db_category_stw_all());
+
+	//Список категорий текущего пользователя
+	$stw_users_categories_userid = qa_db_select_with_pending(qa_db_category_stw_user($userid));
+	$stw_users_categories_userid_title = array();
+
+	//Формируем список категорий текущего пользователя для вывода в select
+	foreach($stw_users_categories_userid as $value){
+		$value = intval($value);
+		$stw_users_categories_userid_title[] = $stw_users_categories[$value]['title'];
+	}
+
+	//Формируем список всех категорий пользователей для вывода в select
+	$stw_users_categories_select_array = array();
+	foreach($stw_users_categories as $value){
+	
+		$stw_users_categories_select_array[$value['categoryid']] = $value['title'];
+	
+	}
+	
+}
 
 // Process profile if saved
 
@@ -89,7 +126,46 @@ else {
 		$inprofile = array();
 		foreach ($userfields as $userfield)
 			$inprofile[$userfield['fieldid']] = qa_post_text('field_' . $userfield['fieldid']);
+		
+		
+		//Если пользователь ДОКТОР, то сохраняем категории
+		if($useraccount['level'] == 20){
+			
+			//Добавляем категории пользователя
+			$stw_user_category_post_array = qa_post_array('stw_user_category');
+			$stw_user_category_insert_array = array();
+			
+			if(is_array($stw_user_category_post_array) AND count($stw_user_category_post_array)){
+				
+				foreach($stw_user_category_post_array as $key => $value){
+					$value = intval($value);
+					if(!$value OR !isset($stw_users_categories_select_array[$value])){
+						unset($stw_user_category_post_array[$key]);
+					} else {
+						$stw_user_category_insert_array[] = array('userid' => $userid, 'categoryid' => $value);
+					} 
+			
+				}
+			
+				if(count($stw_user_category_insert_array)){
 
+					qa_db_query_sub(
+						'DELETE FROM ^usercategories WHERE userid=#',
+						$userid
+					);
+			
+					qa_db_query_sub(
+						'INSERT INTO ^usercategories (userid, categoryid) VALUES #',
+						$stw_user_category_insert_array
+					);
+			
+				}
+				
+			}
+			
+		}
+		
+		
 		if (!qa_check_form_security_code('account', qa_post_text('code')))
 			$errors['page'] = qa_lang_html('misc/form_security_again');
 		else {
@@ -152,15 +228,92 @@ else {
 
 			if (count($inprofile)) {
 				$filtermodules = qa_load_modules_with('filter', 'filter_profile');
-				foreach ($filtermodules as $filtermodule)
+				foreach ($filtermodules as $filtermodule){
 					$filtermodule->filter_profile($inprofile, $errors, $useraccount, $userprofile);
+					
+				}
 			}
+			
+			//Перебираем файлы доп. поля
+			if (count($inprofile)) {
 
+				foreach ($userfields as $userfield){
+					
+					if($userfield['flags'] == 3){ //Если поле - это файл
+						
+						$filed_image_id = 'field_' . $userfield['fieldid'];
+						
+						$inprofile[$userfield['fieldid']] = '';
+						
+						//Получаем blobid старого фото
+						if(isset($userprofile[$userfield['title']]))
+							$field_image_oldblobid = $userprofile[$userfield['title']];
+						else
+							$field_image_oldblobid = null;
+						
+						//Если нужно удалить фото
+						if(qa_post_text('field_' . $userfield['fieldid'] . '_delete')){
+							
+							require_once QA_INCLUDE_DIR . 'app/blobs.php';
+							
+							if (isset($field_image_oldblobid))
+								qa_delete_blob($field_image_oldblobid);
+							
+						} elseif(is_array(@$_FILES[$filed_image_id])){
+
+							$field_image_fileerror = $_FILES[$filed_image_id]['error'];
+
+							// Note if $_FILES['file']['error'] === 1 then upload_max_filesize has been exceeded
+							if ($field_image_fileerror === 1)
+								$errors[$filed_image_id] = qa_lang('main/file_upload_limit_exceeded');
+							elseif ($field_image_fileerror === 0 && $_FILES[$filed_image_id]['size'] > 0) {
+								require_once QA_INCLUDE_DIR . 'app/limits.php';
+
+								switch (qa_user_permit_error(null, QA_LIMIT_UPLOADS)) {
+									case 'limit':
+										$errors[$filed_image_id] = qa_lang('main/upload_limit');
+										break;
+
+									default:
+										$errors[$filed_image_id] = qa_lang('users/no_permission');
+										break;
+
+									case false:
+										qa_limits_increment($userid, QA_LIMIT_UPLOADS);
+										$toobig = qa_image_file_too_big($_FILES[$filed_image_id]['tmp_name'], qa_opt('field_image_size'));
+										
+										if ($toobig)
+											$errors[$filed_image_id] = qa_lang_sub('main/image_too_big_x_pc', (int)($toobig * 100));
+										else {
+											
+											$field_image_blobid = qa_field_image_save($userid, file_get_contents($_FILES[$filed_image_id]['tmp_name']), $field_image_oldblobid);
+											
+											if($field_image_blobid){
+												$inprofile[$userfield['fieldid']] = $field_image_blobid;
+											} else {
+												$errors[$filed_image_id] = qa_lang_sub('main/image_not_read', implode(', ', qa_gd_image_formats()));
+											}
+								
+										}
+										break;
+								}
+								
+							}  else {
+								
+								$inprofile[$userfield['fieldid']] = $userprofile[$userfield['title']];
+								
+							}
+							
+						}
+					}
+				}
+			}
+			
 			foreach ($userfields as $userfield) {
-				if (!isset($errors[$userfield['fieldid']]))
+				if (!isset($errors[$userfield['fieldid']]) AND isset($inprofile[$userfield['fieldid']]))
 					qa_db_user_profile_set($userid, $userfield['title'], $inprofile[$userfield['fieldid']]);
 			}
-
+			
 			list($useraccount, $userprofile) = qa_db_select_with_pending(
 				qa_db_user_account_selectspec($userid, true), qa_db_user_profile_selectspec($userid, true)
 			);
@@ -403,6 +556,22 @@ if (qa_opt('avatar_allow_gravatar') || qa_opt('avatar_allow_upload')) {
 }
 
 
+//Если пользователь ДОКТОР, то выводим выбор категории - SELECT 
+if($useraccount['level'] == 20){
+	
+	$qa_content['form_profile']['fields']['stw_user_category'] = array(
+		'type' => 'select',
+		'label' => qa_lang_html('profile/stw_user_category_edit_label'),
+		'tags' => 'name="stw_user_category[]" multiple class="js-select2" style="width: 100%; max-width: 200px;"',
+		'options' => $stw_users_categories_select_array,
+		'value' => $stw_users_categories_userid_title,
+		'error' => qa_html(isset($errors['stw_user_category']) ? $errors['stw_user_category'] : null),
+		'id' => 'stw_user_category',
+	);
+	
+}
+
+
 // Other profile fields
 
 foreach ($userfields as $userfield) {
@@ -413,15 +582,79 @@ foreach ($userfields as $userfield) {
 	$label = trim(qa_user_userfield_label($userfield), ':');
 	if (strlen($label))
 		$label .= ':';
-
-	$qa_content['form_profile']['fields'][$userfield['title']] = array(
-		'label' => qa_html($label),
-		'tags' => 'name="field_' . $userfield['fieldid'] . '"',
-		'value' => qa_html($value),
-		'error' => qa_html(isset($errors[$userfield['fieldid']]) ? $errors[$userfield['fieldid']] : null),
-		'rows' => ($userfield['flags'] & QA_FIELD_FLAGS_MULTI_LINE) ? 8 : null,
-		'type' => $isblocked ? 'static' : 'text',
-	);
+	
+	if($userfield['flags'] == '3'){ //Если тип image
+		
+		if(!$isblocked){
+		
+			$qa_content['form_profile']['fields'][$userfield['title']] = array(
+				'label' => qa_html($label),
+				'tags' => 'name="field_' . $userfield['fieldid'] . '"',
+				'value' => qa_html($value),
+				'error' => qa_html(isset($errors[$userfield['fieldid']]) ? $errors[$userfield['fieldid']] : null),
+				'type' => 'file',
+			);
+		
+			$field_image_html_input = '<input name="field_'.$userfield['fieldid'].'" type="file" class="qa-form-wide-file">';
+		
+		
+					
+			if(isset($userprofile[$userfield['title']]) AND $userprofile[$userfield['title']]){
+				$field_image_html_img = '
+					<a href="/?qa=image&qa_blobid='.$userprofile[$userfield['title']].'" data-fancybox="diploms" data-caption="Диплом">
+						<img src="/?qa=image&qa_blobid='.$userprofile[$userfield['title']].'&qa_size=200" alt="" />
+					</a>
+					';
+				$field_image_html_delete = '<input name="field_'.$userfield['fieldid'].'_delete" type="checkbox" value="1" class="qa-form-wide-checkbox"><span class="qa-form-wide-note">Удалить?</span>';
+			} else {
+				$field_image_html_img = '';
+				$field_image_html_delete = '';
+			}
+		
+			$qa_content['form_profile']['fields'][$userfield['title']] = array(
+				'label' => qa_html($label),
+				'html' => '
+					<div>' . $field_image_html_img . '</div>
+					<div>' . $field_image_html_delete . '</div>
+					<div>' . $field_image_html_input . '</div><br /><br />
+					',
+				'type' => 'custom',
+			);
+			
+		} else {
+			
+			if(isset($userprofile[$userfield['title']]) AND $userprofile[$userfield['title']]){
+				
+				$qa_content['form_profile']['fields'][$userfield['title']] = array(
+					/*'label' => false,
+					'style' => 'wide',
+					'columns' => 1,*/
+					'label' => qa_html($label),
+					'html' => '
+						<a href="/?qa=image&qa_blobid='.$userprofile[$userfield['title']].'" data-fancybox="diploms" data-caption="Диплом">
+							<img src="/?qa=image&qa_blobid='.$userprofile[$userfield['title']].'&qa_size=200" alt="" />
+						</a>
+						',
+					'type' => 'custom',
+				);
+				
+			}
+			
+		}
+				
+	} else {
+		
+		$qa_content['form_profile']['fields'][$userfield['title']] = array(
+			'label' => qa_html($label),
+			'tags' => 'name="field_' . $userfield['fieldid'] . '"',
+			'value' => qa_html($value),
+			'error' => qa_html(isset($errors[$userfield['fieldid']]) ? $errors[$userfield['fieldid']] : null),
+			'rows' => ($userfield['flags'] & QA_FIELD_FLAGS_MULTI_LINE) ? 8 : null,
+			'type' => $isblocked ? 'static' : 'text',
+		);
+		
+	}
+	
 }
 
 

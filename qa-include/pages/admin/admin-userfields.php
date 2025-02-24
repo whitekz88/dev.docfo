@@ -160,6 +160,7 @@ $typeoptions = array(
 	0 => qa_lang_html('admin/field_single_line'),
 	QA_FIELD_FLAGS_MULTI_LINE => qa_lang_html('admin/field_multi_line'),
 	QA_FIELD_FLAGS_LINK_URL => qa_lang_html('admin/field_link_url'),
+	QA_FIELD_FLAGS_IMAGE => qa_lang_html('admin/field_image'),
 );
 
 $permitoptions = qa_admin_permit_options(QA_PERMIT_ALL, QA_PERMIT_ADMINS, false, false);

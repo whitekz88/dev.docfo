@@ -1083,9 +1083,9 @@ class qa_html_theme_base
 		} else
 			$this->output('<tr>');
 
-		if ($columns > 1 || !empty($field['label']))
+		if ($columns > 1 || !empty($field['label']) AND $field['label'] !== false){
 			$this->form_label($field, $style, $columns, $prefixed, $suffixed, $colspan);
-
+		}
 		if ($tworows) {
 			$this->output(
 				'</tr>',
@@ -1360,10 +1360,18 @@ class qa_html_theme_base
 		$matchbykey = isset($field['match_by']) && $field['match_by'] === 'key';
 
 		foreach ($field['options'] as $key => $value) {
-			$selected = isset($field['value']) && (
-				($matchbykey && $key === $field['value']) ||
-				(!$matchbykey && $value === $field['value'])
-			);
+			if(isset($field['value']) && is_array($field['value'])) {
+				
+				$selected = in_array($value, $field['value']);
+				
+			} else {
+				
+				$selected = isset($field['value']) && (
+					($matchbykey && $key === $field['value']) ||
+					(!$matchbykey && $value === $field['value'])
+				);
+				
+			}
 			$this->output('<option value="' . $key . '"' . ($selected ? ' selected' : '') . '>' . $value . '</option>');
 		}
 

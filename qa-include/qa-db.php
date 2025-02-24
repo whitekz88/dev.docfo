@@ -183,6 +183,9 @@ function qa_db_disconnect()
  */
 function qa_db_query_raw($query)
 {
+//	echo $query;
+//	echo '<br/><br/>';
+	
 	if (qa_to_override(__FUNCTION__)) { $args=func_get_args(); return qa_call_override(__FUNCTION__, $args); }
 
 	if (QA_DEBUG_PERFORMANCE) {
